@@ -25,7 +25,10 @@ A full-stack web application for store ratings with role-based access.
 
 - Node.js (v14+)
 - PostgreSQL installed and running
-- Database: `MyProjectDB` (create in pgAdmin or via psql)
+
+### Database Setup
+
+1. Create a PostgreSQL database named `roxiler_db` (using pgAdmin, psql, or your preferred tool)
 
 ### Backend Setup
 
@@ -49,6 +52,49 @@ Copy `.env.example` to `.env` and fill in your values:
 PORT=5000
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
+POSTGRES_DB=roxiler_db
+POSTGRES_USER=your_database_user
+POSTGRES_PASSWORD=your_database_password
+JWT_SECRET=your_jwt_secret_here
+```
+
+### Demo Credentials
+
+After starting the backend, demo users are automatically created:
+
+- **Admin:** email: `admin@example.com`, password: `Admin@123`
+- **User:** email: `demo@example.com`, password: `DemoUser@123`
+- **Owner:** email: `owner@example.com`, password: `Owner@123`
+
+Use these to test different roles.
+
+## Usage
+
+1. Start the backend server
+2. Start the frontend development server
+3. Open http://localhost:5173 in your browser
+4. Login with demo credentials or create new accounts
+5. Explore the dashboards and features based on your role
+
+## API Documentation
+
+The backend provides RESTful APIs for all operations. Key endpoints:
+
+- `POST /api/auth/signup` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/stores` - Get all stores (with search/sort)
+- `POST /api/ratings` - Submit rating
+- `GET /api/users` - Admin: Get all users
+- `POST /api/users` - Admin: Create user
+- `POST /api/stores` - Admin/Owner: Create store
+
+## Security Notes
+
+- Passwords are hashed using bcrypt
+- JWT tokens for authentication
+- Role-based access control
+- Input validation on both client and server
+- Sensitive data excluded from version control (.env files)
 POSTGRES_DB=MyProjectDB
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=your_password_here

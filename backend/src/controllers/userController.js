@@ -14,7 +14,36 @@ exports.getAllUsers = async (req, res) => {
       where,
       order: [["name", "ASC"]],
       attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: require("../models/Store"),
+          as: "stores",
+          attributes: [],
+          required: false,
+        },
+      ],
     });
+
+    // Calculate average rating for owners
+    for (let user of users) {
+      if (user.role === "owner") {
+        const stores = await require("../models/Store").findAll({
+          where: { ownerId: user.id },
+          include: [{ model: require("../models/Rating"), attributes: [] }],
+          attributes: [
+            [
+              require("sequelize").fn("AVG", require("sequelize").col("Ratings.rating")),
+              "avgRating",
+            ],
+          ],
+          group: ["Store.id"],
+          raw: true,
+        });
+        const avg = stores.length ? stores.reduce((acc, s) => acc + parseFloat(s.avgRating || 0), 0) / stores.length : 0;
+        user.dataValues.averageRating = avg;
+      }
+    }
+
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
